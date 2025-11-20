@@ -1,17 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 
 const CANVAS_SIZE = 800;
-const FRAME_RANGE = 300;
 const OFFSET_RANGE = 600;
 const ZOOM_MIN = 0.4;
 const ZOOM_MAX = 1;
+const ROTATION_RANGE = 90;
 
 const TwiboFrameEditor = () => {
   const [imageUrl, setImageUrl] = useState(null);
   const [imageOffsetX, setImageOffsetX] = useState(0);
   const [imageOffsetY, setImageOffsetY] = useState(0);
-  const [frameOffsetY, setFrameOffsetY] = useState(0);
   const [zoomFactor, setZoomFactor] = useState(1);
+  const [imageRotation, setImageRotation] = useState(0);
   const [frameLoaded, setFrameLoaded] = useState(false);
   const canvasRef = useRef(null);
   const userImageRef = useRef(null);
@@ -49,11 +49,11 @@ const TwiboFrameEditor = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     imageUrl,
-    frameOffsetY,
     frameLoaded,
     imageOffsetY,
     imageOffsetX,
     zoomFactor,
+    imageRotation,
   ]);
 
   useEffect(() => {
@@ -110,26 +110,27 @@ const TwiboFrameEditor = () => {
       const scale = baseScaleRef.current * zoomFactor;
       const drawWidth = userImageRef.current.width * scale;
       const drawHeight = userImageRef.current.height * scale;
+      const radians = (imageRotation * Math.PI) / 180;
+      const centerX = imageOffsetX + drawWidth / 2;
+      const centerY = imageOffsetY + drawHeight / 2;
 
+      ctx.save();
+      ctx.translate(centerX, centerY);
+      ctx.rotate(radians);
       ctx.drawImage(
         userImageRef.current,
-        imageOffsetX,
-        imageOffsetY,
+        -drawWidth / 2,
+        -drawHeight / 2,
         drawWidth,
         drawHeight
       );
+      ctx.restore();
     } else {
       drawPlaceholder(ctx);
     }
 
     if (frameImageRef.current) {
-      ctx.drawImage(
-        frameImageRef.current,
-        0,
-        frameOffsetY,
-        CANVAS_SIZE,
-        CANVAS_SIZE
-      );
+      ctx.drawImage(frameImageRef.current, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
     }
   };
 
@@ -170,6 +171,10 @@ const TwiboFrameEditor = () => {
 
   const handleZoomChange = (next) => {
     setZoomFactor(clamp(next, ZOOM_MIN, ZOOM_MAX));
+  };
+
+  const handleRotationChange = (next) => {
+    setImageRotation(clamp(next, -ROTATION_RANGE, ROTATION_RANGE));
   };
 
   const handlePointerDown = (event) => {
@@ -289,15 +294,17 @@ const TwiboFrameEditor = () => {
 
           <div className="slider-group">
             <div className="slider-label">
-              <span>Frame vertical offset</span>
-              <span>{frameOffsetY}px</span>
+              <span>Photo rotation</span>
+              <span>{Math.round(imageRotation)}°</span>
             </div>
             <input
               type="range"
-              min={-FRAME_RANGE}
-              max={FRAME_RANGE}
-              value={frameOffsetY}
-              onChange={(event) => setFrameOffsetY(Number(event.target.value))}
+              min={-ROTATION_RANGE}
+              max={ROTATION_RANGE}
+              value={imageRotation}
+              onChange={(event) =>
+                handleRotationChange(Number(event.target.value))
+              }
             />
           </div>
 
