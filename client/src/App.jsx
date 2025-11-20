@@ -12,8 +12,7 @@ function App() {
         </h1>
         <p className="lead">
           Drop your barkada photo, drag it into place, and overlay the official
-          Iska-Fest frame with pixel-perfect control. Everything edits locally
-          in your browser—no uploads required.
+          Iska-Fest frame with pixel-perfect control.
         </p>
       </div>
 
@@ -21,7 +20,7 @@ function App() {
 
       <footer>
         <p>Made with love by PCA Committee!!!!.</p>
-        <p>Ayaw Gumana ng Twibbon Bilang IT Ako na Magaadjust HAHAHAHAHA-Jon Carlo</p>
+        <p>Ayaw Gumana ng Twibbon, Bilang IT Ako na Magaadjust HAHAHAHAHA -Jon Carlo</p>
       </footer>
     </div>
   );
