@@ -20,7 +20,7 @@ function App() {
 
       <footer>
         <p>Made with love by PCA Committee!!!!.</p>
-        <p>Ayaw Gumana ng Twibbon, Bilang IT Ako na Magaadjust -Jon Carlo</p>
+        <p>Ayaw Gumana ng Twibbon, Bilang IT Ako na Magaadjust HAHAHAHAHA -Jon Carlo</p>
       </footer>
     </div>
   );
